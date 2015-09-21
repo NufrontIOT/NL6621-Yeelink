@@ -32,6 +32,7 @@
 typedef struct{
    float C_LOW,C_HIGH;
    int   I_LOW,I_HIGH;
+   char  *AirQuality;
 }AQI_DATA;
 
 typedef struct{

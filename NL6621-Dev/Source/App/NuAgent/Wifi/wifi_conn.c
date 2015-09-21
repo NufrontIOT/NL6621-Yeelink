@@ -219,7 +219,7 @@ int StartDirectConfigConn(void)
     /* start direct config */
     log_info("Start directconfig...\n");
 	DirectCfgFlag = 0;
-    InfDirectCfgStart(0, 0);
+    InfDirectCfgStart(0, 0,NULL);
 
     /* print steps */
     while (1) 
@@ -323,17 +323,17 @@ void Agent_network_init(void)
 	if (nl6621_GetConfigData(&Agent_config_data) != 0) {
 		log_info("Get GAgentConfig Data error.\n");
 	}
-	//测试用
-	//调试用的
-#define wifissid   "NUFRONT-test03"//"nu2.4" 
-#define wifikey	   "nufront.iopjklbnm" //"google.com.k" 
+	//测试用,请填写WIFI的账号和密码，或者屏蔽以下代码用手机APP来配置，详细参照SDK用户手册
+    #define wifissid   "NUFRONT-test03"//"nu2.4" 
+    #define wifikey	   "nufront.iopjklbnm" //"google.com.k" 
 
 	Agent_config_data.flag |= XPG_CFG_FLAG_CONNECTED;
 	memcpy(Agent_config_data.wifi_ssid,wifissid,strlen(wifissid));
 	Agent_config_data.wifi_ssid[strlen(wifissid)] = 0;
  	memcpy(Agent_config_data.wifi_key,wifikey,strlen(wifikey));
   	Agent_config_data.wifi_key[strlen(wifikey)] = 0;
-	//测试用
+	//测试用，以上代码是，免用户配置。
+
 	if ((Agent_config_data.flag & XPG_CFG_FLAG_CONNECTED) == XPG_CFG_FLAG_CONNECTED) {
         /* setup station mode */
 		sys_status.status = SYS_STATUS_WIFI_DIRECTCONFING;

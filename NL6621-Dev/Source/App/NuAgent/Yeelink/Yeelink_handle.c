@@ -139,7 +139,7 @@ VOID Yeelink_Run(VOID *arg)
 	          Yeelink_Printf(GAGENT_WARNING,"Dust=>Send success.\n");
 	       }	
 		   while(TCPClient_reset_flag != 1)
-		      OSTimeDly(100);
+		      OSTimeDly(500);
 
 
 		   //室内温度    376378
@@ -152,8 +152,7 @@ VOID Yeelink_Run(VOID *arg)
 	          Yeelink_Printf(GAGENT_WARNING,"Temperature=>Send data success.\n");
 	       }		
 		   while(TCPClient_reset_flag != 1)
-		      OSTimeDly(10);
-		   OSTimeDly(100);	
+		      OSTimeDly(500);	
 	  
 		  //甲醛浓度    376382
 		   buffer = yeelink_post(AirTest_ID,Methanal_ID,sensordata.Methanal);
@@ -165,7 +164,7 @@ VOID Yeelink_Run(VOID *arg)
 	          Yeelink_Printf(GAGENT_WARNING,"Methanal=>Send data success.\n");
 	       }		
 		   while(TCPClient_reset_flag != 1)
-		      OSTimeDly(100);
+		      OSTimeDly(500);
 
 		  //室内湿度    376383
 		   buffer = yeelink_post(AirTest_ID,Humidity_ID,(int)sensordata.Humidity);
@@ -177,7 +176,7 @@ VOID Yeelink_Run(VOID *arg)
 	          Yeelink_Printf(GAGENT_WARNING,"Humidity=>Send data success.\n");
 	       }		
 		   while(TCPClient_reset_flag != 1)
-		      OSTimeDly(100);
+		      OSTimeDly(500);
 
 		  //空气质量指数 376376
 		   buffer = yeelink_post(AirTest_ID,AQI_ID,sensordata.AQI);
@@ -189,9 +188,9 @@ VOID Yeelink_Run(VOID *arg)
 	          Yeelink_Printf(GAGENT_WARNING,"AQI=>Send data success.\n");
 	       }		
 		   while(TCPClient_reset_flag != 1)
-		      OSTimeDly(100);
+		      OSTimeDly(500);
 	   }
-  	   OSTimeDly(100); 	   
+  	   OSTimeDly(500); 	   
    }
 }
 
@@ -207,13 +206,13 @@ int make_rand(int start, int end)
 	return value;
 }
 
-AQI_DATA  aqi_data[7] = {0,     15.4,   0,   50,  //优
-                         15.5,  40.4,  51,  100,  //良
-						 40.5,  65.4,  101, 150,  //轻度污染
-						 65.5,  150.4, 151, 200,  //中度污染
-						 150.5, 250.4, 201, 300,  //重度污染
-						 250.5, 350.4, 301, 400,  //严重污染
-						 350.5, 500.4, 401, 500,  //有毒害     
+AQI_DATA  aqi_data[7] = {0,     15.4,   0,   50, "优", //优
+                         15.5,  40.4,  51,  100, "良",//良
+						 40.5,  65.4,  101, 150, "轻度污染",//轻度污染
+						 65.5,  150.4, 151, 200, "中度污染",//中度污染
+						 150.5, 250.4, 201, 300, "重度污染",//重度污染
+						 250.5, 350.4, 301, 400, "严重污染",//严重污染
+						 350.5, 500.4, 401, 500, "有毒害",//有毒害     
 						 };
 
 
@@ -232,7 +231,9 @@ static int Calculation_AQI(int _dust)
 	       aqi = (int)((aqi_data[i].I_HIGH - aqi_data[i].I_LOW)/(aqi_data[i].C_HIGH - aqi_data[i].C_LOW)*(dust - aqi_data[i].C_LOW));
 
 		   aqi += aqi_data[i].I_LOW;
-	   
+
+	       Yeelink_Printf(GAGENT_WARNING,"%s", aqi_data[i].AirQuality);
+
 	       return aqi;
 	   }
 	}
@@ -246,7 +247,7 @@ static int GetDustData(void)
 	int Dust;
 	
 	Dust = make_rand(5, 500);
-	Yeelink_Printf(GAGENT_WARNING, "Dust:%d\n", Dust);
+	Yeelink_Printf(GAGENT_WARNING, "Dust:%d", Dust);
 	
 	return Dust;
 }
@@ -257,7 +258,7 @@ static int GetTemData(void)
     int temp;
 
 	temp = make_rand(-20, 40);
-    Yeelink_Printf(GAGENT_WARNING, "Temperature:%d\n", temp);
+    Yeelink_Printf(GAGENT_WARNING, "Temperature:%d", temp);
 	
 	return temp;
 }
@@ -267,7 +268,7 @@ static int GetHumData(void)
     int Hum;
 
 	Hum = make_rand(0, 100);
-	Yeelink_Printf(GAGENT_WARNING, "Humidity:%d\n", Hum);
+	Yeelink_Printf(GAGENT_WARNING, "Humidity:%d", Hum);
 	
 	return Hum;
 }
@@ -279,7 +280,7 @@ static int GetMethanalData(void)
     int methanal;
 
 	methanal = make_rand(1, 1000);
-    Yeelink_Printf(GAGENT_WARNING, "Methanal:%d\n", methanal);
+    Yeelink_Printf(GAGENT_WARNING, "Methanal:%d", methanal);
 	
 	return methanal;
 }
@@ -290,7 +291,7 @@ static int GetAQIData(void)
     int aqi;
 
 	aqi = Calculation_AQI(sensordata.Dust);
-	Yeelink_Printf(GAGENT_WARNING,"AQI:%d\n", aqi);
+	Yeelink_Printf(GAGENT_WARNING,"AQI:%d", aqi);
 	
 	return aqi;
 }
